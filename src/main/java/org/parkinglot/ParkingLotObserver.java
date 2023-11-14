@@ -1,6 +1,6 @@
 package org.parkinglot;
 
-public interface ParkingLotOwner {
+public interface ParkingLotObserver {
 
     public void notifyFull();
 }

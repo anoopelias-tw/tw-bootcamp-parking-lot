@@ -53,13 +53,29 @@ public class ParkingLotTest {
 
     @Test
     public void testOwnerNotifiedOnParkingFull() throws ParkingLotFullException, AlreadyParkedException {
-        ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
+        ParkingLotObserver owner = Mockito.mock(ParkingLotObserver.class);
         ParkingLot parkingLot = new ParkingLot(2);
-        parkingLot.owner(owner);
+        parkingLot.addObserver(owner);
 
         parkingLot.park(Mockito.mock(Parkable.class));
         parkingLot.park(Mockito.mock(Parkable.class));
 
         verify(owner, times(1)).notifyFull();
+    }
+
+    @Test
+    public void testBothOwnerAndTrafficIsNotifiedWhenParkingIsFull() throws ParkingLotFullException, AlreadyParkedException {
+        ParkingLotObserver owner = Mockito.mock(ParkingLotObserver.class);
+        ParkingLotObserver trafficPolice = Mockito.mock(ParkingLotObserver.class);
+
+        ParkingLot parkingLot = new ParkingLot(2);
+        parkingLot.addObserver(owner);
+        parkingLot.addObserver(trafficPolice);
+
+        parkingLot.park(Mockito.mock(Parkable.class));
+        parkingLot.park(Mockito.mock(Parkable.class));
+
+        verify(owner, times(1)).notifyFull();
+        verify(trafficPolice, times(1)).notifyFull();
     }
 }

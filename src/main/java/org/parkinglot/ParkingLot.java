@@ -1,6 +1,7 @@
 package org.parkinglot;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ParkingLot {
@@ -8,10 +9,11 @@ public class ParkingLot {
 
     private final Set<Parkable> cars;
 
-    private ParkingLotOwner owner;
+    private final Set<ParkingLotObserver> observers;
 
     public ParkingLot(int capacity) {
         cars = new HashSet<>();
+        observers = new HashSet<>();
         this.capacity = capacity;
     }
 
@@ -27,8 +29,14 @@ public class ParkingLot {
 
         cars.add(car);
 
-        if (cars.size() == capacity && this.owner != null) {
-            this.owner.notifyFull();
+        if (cars.size() == capacity) {
+            this.notifyFull();
+        }
+    }
+
+    private void notifyFull() {
+        for (ParkingLotObserver observer : observers) {
+            observer.notifyFull();
         }
     }
 
@@ -40,7 +48,7 @@ public class ParkingLot {
         cars.remove(car);
     }
 
-    public void owner(ParkingLotOwner owner) {
-        this.owner = owner;
+    public void addObserver(ParkingLotObserver observer) {
+        this.observers.add(observer);
     }
 }
