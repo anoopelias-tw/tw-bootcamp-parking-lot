@@ -8,6 +8,8 @@ public class ParkingLot {
 
     private final Set<Parkable> cars;
 
+    private ParkingLotOwner owner;
+
     public ParkingLot(int capacity) {
         cars = new HashSet<>();
         this.capacity = capacity;
@@ -22,7 +24,12 @@ public class ParkingLot {
         if (cars.size() == capacity) {
             throw new ParkingLotFullException();
         }
+
         cars.add(car);
+
+        if (cars.size() == capacity && this.owner != null) {
+            this.owner.notifyFull();
+        }
     }
 
     public void unpark(Parkable car) throws NotParkedHereException {
@@ -31,5 +38,9 @@ public class ParkingLot {
         }
 
         cars.remove(car);
+    }
+
+    public void owner(ParkingLotOwner owner) {
+        this.owner = owner;
     }
 }

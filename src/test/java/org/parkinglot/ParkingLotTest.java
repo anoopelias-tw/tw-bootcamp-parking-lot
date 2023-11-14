@@ -3,6 +3,7 @@ package org.parkinglot;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -48,5 +49,17 @@ public class ParkingLotTest {
         Parkable car = Mockito.mock(Parkable.class);
         ParkingLot parkingLot = new ParkingLot(1);
         assertThrows(NotParkedHereException.class, () -> parkingLot.unpark(car));
+    }
+
+    @Test
+    public void testOwnerNotifiedOnParkingFull() throws ParkingLotFullException, AlreadyParkedException {
+        ParkingLotOwner owner = Mockito.mock(ParkingLotOwner.class);
+        ParkingLot parkingLot = new ParkingLot(2);
+        parkingLot.owner(owner);
+
+        parkingLot.park(Mockito.mock(Parkable.class));
+        parkingLot.park(Mockito.mock(Parkable.class));
+
+        verify(owner, times(1)).notifyFull();
     }
 }
