@@ -9,11 +9,11 @@ public class ParkingLot {
 
     private final Set<Parkable> cars;
 
-    private final Set<ParkingLotObserver> observers;
+    private final ParkingLotObservers observers;
 
     public ParkingLot(int capacity) {
         cars = new HashSet<>();
-        observers = new HashSet<>();
+        observers = new ParkingLotObservers();
         this.capacity = capacity;
     }
 
@@ -30,13 +30,7 @@ public class ParkingLot {
         cars.add(car);
 
         if (cars.size() == capacity) {
-            this.notifyFull();
-        }
-    }
-
-    private void notifyFull() {
-        for (ParkingLotObserver observer : observers) {
-            observer.notifyFull();
+            this.observers.notifyFull();
         }
     }
 
