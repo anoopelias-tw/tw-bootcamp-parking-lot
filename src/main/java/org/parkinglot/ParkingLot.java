@@ -1,7 +1,19 @@
 package org.parkinglot;
 
 public class ParkingLot {
-    public void park(Car car) throws AlreadyParkedException {
+    private int noOfCars;
+    private final int capacity;
+
+    public ParkingLot(int capacity) {
+        noOfCars = 0;
+        this.capacity = capacity;
+    }
+
+    public void park(Car car) throws AlreadyParkedException, ParkingLotFullException {
+        if (noOfCars == capacity) {
+            throw new ParkingLotFullException();
+        }
         car.park();
+        noOfCars += 1;
     }
 }
