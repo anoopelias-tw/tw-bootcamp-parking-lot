@@ -16,10 +16,10 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void testParkAlreadyParkedCar() throws AlreadyParkedException {
+    public void testParkAlreadyParkedCar() throws AlreadyParkedException, ParkingLotFullException {
         Parkable car = Mockito.mock(Parkable.class);
-        doThrow(AlreadyParkedException.class).when(car).park();
         ParkingLot parkingLot = new ParkingLot(2);
+        parkingLot.park(car);
         assertThrows(AlreadyParkedException.class,() -> parkingLot.park(car));
     }
 
@@ -30,5 +30,23 @@ public class ParkingLotTest {
         Parkable jeepCompass = Mockito.mock(Parkable.class);
         parkingLot.park(silverStallion);
         assertThrows(ParkingLotFullException.class,() -> parkingLot.park(jeepCompass));
+    }
+
+    @Test
+    public void testUnparkCar() throws ParkingLotFullException, AlreadyParkedException, NotParkedHereException {
+        Parkable car = Mockito.mock(Parkable.class);
+        ParkingLot parkingLot = new ParkingLot(1);
+        parkingLot.park(car);
+        parkingLot.unpark(car);
+
+        Parkable nextCar = Mockito.mock(Parkable.class);
+        parkingLot.park(nextCar);
+    }
+
+    @Test
+    public void testUnparkACarThatIsNotParkedThere() {
+        Parkable car = Mockito.mock(Parkable.class);
+        ParkingLot parkingLot = new ParkingLot(1);
+        assertThrows(NotParkedHereException.class, () -> parkingLot.unpark(car));
     }
 }
