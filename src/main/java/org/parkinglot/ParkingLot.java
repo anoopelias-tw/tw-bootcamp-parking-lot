@@ -1,7 +1,6 @@
 package org.parkinglot;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ParkingLot {
@@ -40,6 +39,10 @@ public class ParkingLot {
         }
 
         cars.remove(car);
+
+        if (cars.size() == capacity - 1) {
+            this.observers.notifyAvailable();
+        }
     }
 
     public void addObserver(ParkingLotObserver observer) {
