@@ -1,35 +1,24 @@
 package org.parkinglot;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 public class ParkingLotTest {
 
-    private static class MockParkable implements Parkable {
-        private final boolean isParked;
-
-        private MockParkable(boolean isParked) {
-            this.isParked = isParked;
-        }
-
-        public void park() throws AlreadyParkedException {
-            if (isParked) {
-                throw new AlreadyParkedException();
-            }
-        }
-    }
-
     @Test
     public void testParkCar() throws AlreadyParkedException, ParkingLotFullException {
-        Car car = new Car();
+        Parkable car = Mockito.mock(Parkable.class);
         ParkingLot parkingLot = new ParkingLot(1);
         parkingLot.park(car);
     }
 
     @Test
-    public void testParkAlreadyParkedCar() {
-        MockParkable car = new MockParkable(true);
+    public void testParkAlreadyParkedCar() throws AlreadyParkedException {
+        Parkable car = Mockito.mock(Parkable.class);
+        doThrow(AlreadyParkedException.class).when(car).park();
         ParkingLot parkingLot = new ParkingLot(2);
         assertThrows(AlreadyParkedException.class,() -> parkingLot.park(car));
     }
@@ -37,8 +26,8 @@ public class ParkingLotTest {
     @Test
     public void testParkInFullParkingLot() throws AlreadyParkedException, ParkingLotFullException {
         ParkingLot parkingLot = new ParkingLot(1);
-        Car silverStallion = new Car();
-        Car jeepCompass = new Car();
+        Parkable silverStallion = Mockito.mock(Parkable.class);
+        Parkable jeepCompass = Mockito.mock(Parkable.class);
         parkingLot.park(silverStallion);
         assertThrows(ParkingLotFullException.class,() -> parkingLot.park(jeepCompass));
     }
