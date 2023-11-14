@@ -1,6 +1,6 @@
 package org.parkinglot;
 
-public class Car {
+public class Car implements Parkable {
     private boolean parked = false;
 
     public void park() throws AlreadyParkedException {

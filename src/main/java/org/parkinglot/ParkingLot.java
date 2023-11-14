@@ -9,11 +9,11 @@ public class ParkingLot {
         this.capacity = capacity;
     }
 
-    public void park(Car car) throws AlreadyParkedException, ParkingLotFullException {
+    public void park(Parkable parkable) throws AlreadyParkedException, ParkingLotFullException {
         if (noOfCars == capacity) {
             throw new ParkingLotFullException();
         }
-        car.park();
+        parkable.park();
         noOfCars += 1;
     }
 }

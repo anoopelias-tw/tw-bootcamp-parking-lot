@@ -6,6 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParkingLotTest {
 
+    private static class MockParkable implements Parkable {
+        private final boolean isParked;
+
+        private MockParkable(boolean isParked) {
+            this.isParked = isParked;
+        }
+
+        public void park() throws AlreadyParkedException {
+            if (isParked) {
+                throw new AlreadyParkedException();
+            }
+        }
+    }
+
     @Test
     public void testParkCar() throws AlreadyParkedException, ParkingLotFullException {
         Car car = new Car();
@@ -14,10 +28,9 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void testParkAlreadyParkedCar() throws AlreadyParkedException, ParkingLotFullException {
-        Car car = new Car();
+    public void testParkAlreadyParkedCar() {
+        MockParkable car = new MockParkable(true);
         ParkingLot parkingLot = new ParkingLot(2);
-        parkingLot.park(car);
         assertThrows(AlreadyParkedException.class,() -> parkingLot.park(car));
     }
 
