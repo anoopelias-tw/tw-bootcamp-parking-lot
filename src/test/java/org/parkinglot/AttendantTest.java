@@ -27,4 +27,5 @@ public class AttendantTest {
 
         assertThrows(AllParkingLotsAreFullException.class, () -> attendant.park(Mockito.mock(Parkable.class)));
     }
+
 }

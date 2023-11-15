@@ -1,7 +1,7 @@
 package org.parkinglot;
 
 public interface ParkingLotObserver {
-    public void notifyFull();
+    public void notifyFull(ParkingLot parkingLot);
 
-    public void notifyAvailable();
+    public void notifyAvailable(ParkingLot parkingLot);
 }

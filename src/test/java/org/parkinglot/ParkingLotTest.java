@@ -59,7 +59,7 @@ public class ParkingLotTest {
         parkingLot.park(Mockito.mock(Parkable.class));
         parkingLot.park(Mockito.mock(Parkable.class));
 
-        verify(owner, times(1)).notifyFull();
+        verify(owner, times(1)).notifyFull(parkingLot);
     }
 
     @Test
@@ -74,8 +74,8 @@ public class ParkingLotTest {
         parkingLot.park(Mockito.mock(Parkable.class));
         parkingLot.park(Mockito.mock(Parkable.class));
 
-        verify(owner, times(1)).notifyFull();
-        verify(trafficPolice, times(1)).notifyFull();
+        verify(owner, times(1)).notifyFull(parkingLot);
+        verify(trafficPolice, times(1)).notifyFull(parkingLot);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ParkingLotTest {
         parkingLot.park(car);
         parkingLot.unpark(car);
 
-        verify(owner, times(1)).notifyAvailable();
-        verify(trafficPolice, times(1)).notifyAvailable();
+        verify(owner, times(1)).notifyAvailable(parkingLot);
+        verify(trafficPolice, times(1)).notifyAvailable(parkingLot);
     }
 }

@@ -29,7 +29,7 @@ public class ParkingLot {
         cars.add(car);
 
         if (isFull()) {
-            this.observers.notifyFull();
+            this.observers.notifyFull(this);
         }
     }
 
@@ -41,7 +41,7 @@ public class ParkingLot {
         cars.remove(car);
 
         if (cars.size() == capacity - 1) {
-            this.observers.notifyAvailable();
+            this.observers.notifyAvailable(this);
         }
     }
 

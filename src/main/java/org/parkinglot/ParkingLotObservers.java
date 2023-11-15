@@ -4,15 +4,15 @@ import java.util.HashSet;
 
 public class ParkingLotObservers extends HashSet<ParkingLotObserver> {
 
-    public void notifyFull() {
+    public void notifyFull(ParkingLot parkingLot) {
         for (ParkingLotObserver observer : this) {
-            observer.notifyFull();
+            observer.notifyFull(parkingLot);
         }
     }
 
-    public void notifyAvailable() {
+    public void notifyAvailable(ParkingLot parkingLot) {
         for (ParkingLotObserver observer : this) {
-            observer.notifyAvailable();
+            observer.notifyAvailable(parkingLot);
         }
     }
 }
