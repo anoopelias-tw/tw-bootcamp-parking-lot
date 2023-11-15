@@ -22,13 +22,13 @@ public class ParkingLot {
             throw new AlreadyParkedException();
         }
 
-        if (cars.size() == capacity) {
+        if (isFull()) {
             throw new ParkingLotFullException();
         }
 
         cars.add(car);
 
-        if (cars.size() == capacity) {
+        if (isFull()) {
             this.observers.notifyFull();
         }
     }
@@ -43,6 +43,10 @@ public class ParkingLot {
         if (cars.size() == capacity - 1) {
             this.observers.notifyAvailable();
         }
+    }
+
+    public boolean isFull() {
+        return cars.size() == capacity;
     }
 
     public void addObserver(ParkingLotObserver observer) {
