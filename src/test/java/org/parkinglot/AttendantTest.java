@@ -28,4 +28,16 @@ public class AttendantTest {
         assertThrows(AllParkingLotsAreFullException.class, () -> attendant.park(Mockito.mock(Parkable.class)));
     }
 
+    @Test
+    public void testParkAlreadyParkedCarInAnotherLot() throws AlreadyParkedException, AllParkingLotsAreFullException {
+        Attendant attendant = new Attendant();
+        attendant.assignLot(new ParkingLot(1));
+        attendant.assignLot(new ParkingLot(1));
+
+        Parkable car = Mockito.mock(Parkable.class);
+        attendant.park(car);
+
+        assertThrows(AlreadyParkedException.class, () -> attendant.park(car));
+    }
+
 }
