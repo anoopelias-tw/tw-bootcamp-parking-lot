@@ -1,12 +1,12 @@
 package org.parkinglot;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Attendant implements ParkingLotObserver {
 
     private final ParkingLots availableLots = new ParkingLots();
-    private final Set<Parkable> cars = new HashSet<>();
+    private final Map<Parkable, ParkingLot> cars = new HashMap<>();
 
     public void assignLot(ParkingLot parkingLot) {
         parkingLot.addObserver(this);
@@ -21,17 +21,19 @@ public class Attendant implements ParkingLotObserver {
             throw new AllParkingLotsAreFullException();
         }
 
-        if (cars.contains(car)) {
+        if (cars.containsKey(car)) {
             throw new AlreadyParkedException();
         }
 
         try {
-            availableLots.iterator().next().park(car);
+            ParkingLot parkingLot = availableLots.iterator().next();
+            parkingLot.park(car);
+            cars.put(car, parkingLot);
         } catch (ParkingLotFullException e) {
             // Unreachable code
         }
 
-        cars.add(car);
+
     }
 
     @Override
@@ -42,5 +44,14 @@ public class Attendant implements ParkingLotObserver {
     @Override
     public void notifyAvailable(ParkingLot parkingLot) {
         availableLots.add(parkingLot);
+    }
+
+    public void unpark(Parkable car) {
+        try {
+            cars.get(car).unpark(car);
+            cars.remove(car);
+        } catch (NotParkedHereException e) {
+            System.out.println("Unreachable code");
+        }
     }
 }
