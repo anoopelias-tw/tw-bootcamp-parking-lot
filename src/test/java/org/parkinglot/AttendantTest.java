@@ -55,6 +55,8 @@ public class AttendantTest {
     @Test
     public void testAttendantToSelectLargestAvailableSlot() throws AlreadyParkedException, AllParkingLotsAreFullException {
         Attendant attendant = new Attendant();
+        attendant.chooseLargestSlot();
+
         ParkingLot parkingLot = new ParkingLot(1);
         ParkingLot largerParkingLot = new ParkingLot(2);
 
@@ -72,6 +74,30 @@ public class AttendantTest {
 
         verify(parkingLotObserver, never()).notifyFull(parkingLot);
         verify(largeParkingLotObserver, times(1)).notifyFull(largerParkingLot);
+    }
+
+    @Test
+    public void testAttendantToSelectFirstAvailableSlot() throws AlreadyParkedException, AllParkingLotsAreFullException {
+        Attendant attendant = new Attendant();
+        attendant.chooseFirstSlot();
+
+        ParkingLot firstParkingLot = new ParkingLot(2);
+        ParkingLot secondParkingLot = new ParkingLot(1);
+
+        attendant.assignLot(firstParkingLot);
+        attendant.assignLot(secondParkingLot);
+
+        ParkingLotObserver firstParkingLotObserver = mock(ParkingLotObserver.class);
+        ParkingLotObserver secondParkingLotObserver = mock(ParkingLotObserver.class);
+
+        firstParkingLot.addObserver(firstParkingLotObserver);
+        secondParkingLot.addObserver(secondParkingLotObserver);
+
+        attendant.park(mock(Parkable.class));
+        attendant.park(mock(Parkable.class));
+
+        verify(firstParkingLotObserver, times(1)).notifyFull(firstParkingLot);
+        verify(secondParkingLotObserver, never()).notifyFull(secondParkingLot);
 
     }
 }

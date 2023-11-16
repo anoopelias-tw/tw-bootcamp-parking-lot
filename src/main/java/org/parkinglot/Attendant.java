@@ -10,6 +10,8 @@ public class Attendant implements ParkingLotObserver {
     private final ParkingLots availableLots = new ParkingLots();
     private final Map<Parkable, ParkingLot> cars = new HashMap<>();
 
+    private boolean chooseLargestSlot = false;
+
     public void assignLot(ParkingLot parkingLot) {
         parkingLot.addObserver(this);
 
@@ -19,13 +21,18 @@ public class Attendant implements ParkingLotObserver {
     }
 
     private ParkingLot selectParkingLot() throws AllParkingLotsAreFullException {
-        Optional<ParkingLot> parkingLot = availableLots.stream().max(Comparator.comparing(ParkingLot::capacity));
 
-        if (parkingLot.isEmpty()) {
-            throw new AllParkingLotsAreFullException();
+        if (chooseLargestSlot) {
+            Optional<ParkingLot> parkingLot = availableLots.stream().max(Comparator.comparing(ParkingLot::capacity));
+
+            if (parkingLot.isEmpty()) {
+                throw new AllParkingLotsAreFullException();
+            }
+
+            return parkingLot.get();
+        } else {
+            return availableLots.iterator().next();
         }
-
-        return parkingLot.get();
     }
 
     public void park(Parkable car) throws AlreadyParkedException, AllParkingLotsAreFullException {
@@ -59,5 +66,13 @@ public class Attendant implements ParkingLotObserver {
         } catch (NotParkedHereException e) {
             System.out.println("Unreachable code");
         }
+    }
+
+    public void chooseLargestSlot() {
+        chooseLargestSlot = true;
+    }
+
+    public void chooseFirstSlot() {
+        chooseLargestSlot = false;
     }
 }
