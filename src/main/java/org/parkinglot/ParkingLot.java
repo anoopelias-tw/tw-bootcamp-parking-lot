@@ -20,6 +20,10 @@ public class ParkingLot {
         return capacity;
     }
 
+    public int noOfCars() {
+        return cars.size();
+    }
+
     public void park(Parkable car) throws AlreadyParkedException, ParkingLotFullException {
 
         if (cars.contains(car)) {

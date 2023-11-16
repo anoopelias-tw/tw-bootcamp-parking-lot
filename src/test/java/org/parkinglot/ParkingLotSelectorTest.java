@@ -36,4 +36,13 @@ public class ParkingLotSelectorTest {
 
         assertEquals(parkingLotTwo, parkingLotSelector.select(parkingLots));
     }
+
+    @Test
+    public void chooseLeastUsedParkingLot() {
+        ParkingLotSelector parkingLotSelector = new ChooseLeastUsedParkingLotSelector();
+        when(parkingLotOne.noOfCars()).thenReturn(4);
+        when(parkingLotTwo.noOfCars()).thenReturn(3);
+
+        assertEquals(parkingLotTwo, parkingLotSelector.select(parkingLots));
+    }
 }
