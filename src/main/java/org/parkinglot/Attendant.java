@@ -1,7 +1,9 @@
 package org.parkinglot;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Attendant implements ParkingLotObserver {
 
@@ -16,24 +18,28 @@ public class Attendant implements ParkingLotObserver {
         }
     }
 
-    public void park(Parkable car) throws AlreadyParkedException, AllParkingLotsAreFullException {
-        if (availableLots.isEmpty()) {
+    private ParkingLot selectParkingLot() throws AllParkingLotsAreFullException {
+        Optional<ParkingLot> parkingLot = availableLots.stream().max(Comparator.comparing(ParkingLot::capacity));
+
+        if (parkingLot.isEmpty()) {
             throw new AllParkingLotsAreFullException();
         }
 
+        return parkingLot.get();
+    }
+
+    public void park(Parkable car) throws AlreadyParkedException, AllParkingLotsAreFullException {
         if (cars.containsKey(car)) {
             throw new AlreadyParkedException();
         }
 
         try {
-            ParkingLot parkingLot = availableLots.iterator().next();
+            ParkingLot parkingLot = selectParkingLot();
             parkingLot.park(car);
             cars.put(car, parkingLot);
         } catch (ParkingLotFullException e) {
-            // Unreachable code
+            System.out.println("Unreachable code");
         }
-
-
     }
 
     @Override
