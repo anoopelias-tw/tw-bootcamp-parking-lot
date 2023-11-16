@@ -10,7 +10,15 @@ public class Attendant implements ParkingLotObserver {
     private final ParkingLots availableLots = new ParkingLots();
     private final Map<Parkable, ParkingLot> cars = new HashMap<>();
 
-    private boolean chooseLargestSlot = false;
+    private ParkingLotSelector parkingLotSelector;
+
+    public Attendant() {
+        parkingLotSelector = new ChooseFirstParkingLotSelector();
+    }
+
+    public Attendant(ParkingLotSelector parkingLotSelector) {
+        this.parkingLotSelector = parkingLotSelector;
+    }
 
     public void assignLot(ParkingLot parkingLot) {
         parkingLot.addObserver(this);
@@ -20,28 +28,17 @@ public class Attendant implements ParkingLotObserver {
         }
     }
 
-    private ParkingLot selectParkingLot() throws AllParkingLotsAreFullException {
-
-        if (chooseLargestSlot) {
-            Optional<ParkingLot> parkingLot = availableLots.stream().max(Comparator.comparing(ParkingLot::capacity));
-
-            if (parkingLot.isEmpty()) {
-                throw new AllParkingLotsAreFullException();
-            }
-
-            return parkingLot.get();
-        } else {
-            return availableLots.iterator().next();
-        }
-    }
-
     public void park(Parkable car) throws AlreadyParkedException, AllParkingLotsAreFullException {
+        if (availableLots.isEmpty()) {
+            throw new AllParkingLotsAreFullException();
+        }
+
         if (cars.containsKey(car)) {
             throw new AlreadyParkedException();
         }
 
         try {
-            ParkingLot parkingLot = selectParkingLot();
+            ParkingLot parkingLot = parkingLotSelector.select(availableLots);
             parkingLot.park(car);
             cars.put(car, parkingLot);
         } catch (ParkingLotFullException e) {
@@ -69,10 +66,10 @@ public class Attendant implements ParkingLotObserver {
     }
 
     public void chooseLargestSlot() {
-        chooseLargestSlot = true;
+        parkingLotSelector = new ChooseLargestParkingLotSelector();
     }
 
     public void chooseFirstSlot() {
-        chooseLargestSlot = false;
+        parkingLotSelector = new ChooseFirstParkingLotSelector();
     }
 }

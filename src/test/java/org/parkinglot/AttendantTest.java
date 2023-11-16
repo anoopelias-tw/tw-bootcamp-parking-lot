@@ -53,51 +53,21 @@ public class AttendantTest {
     }
 
     @Test
-    public void testAttendantToSelectLargestAvailableSlot() throws AlreadyParkedException, AllParkingLotsAreFullException {
-        Attendant attendant = new Attendant();
-        attendant.chooseLargestSlot();
+    public void testAttendantToSelectSlotGivenByTheSelector() throws AlreadyParkedException, AllParkingLotsAreFullException, ParkingLotFullException {
+        ParkingLotSelector selector = mock(ParkingLotSelector.class);
+        Attendant attendant = new Attendant(selector);
 
-        ParkingLot parkingLot = new ParkingLot(1);
-        ParkingLot largerParkingLot = new ParkingLot(2);
+        ParkingLot parkingLot1 = mock(ParkingLot.class);
+        ParkingLot parkingLot2 = mock(ParkingLot.class);
 
-        attendant.assignLot(parkingLot);
-        attendant.assignLot(largerParkingLot);
+        attendant.assignLot(parkingLot1);
+        attendant.assignLot(parkingLot2);
 
-        ParkingLotObserver parkingLotObserver = mock(ParkingLotObserver.class);
-        largerParkingLot.addObserver(parkingLotObserver);
-
-        ParkingLotObserver largeParkingLotObserver = mock(ParkingLotObserver.class);
-        largerParkingLot.addObserver(largeParkingLotObserver);
-
-        attendant.park(mock(Parkable.class));
+        when(selector.select(any())).thenReturn(parkingLot1);
         attendant.park(mock(Parkable.class));
 
-        verify(parkingLotObserver, never()).notifyFull(parkingLot);
-        verify(largeParkingLotObserver, times(1)).notifyFull(largerParkingLot);
-    }
-
-    @Test
-    public void testAttendantToSelectFirstAvailableSlot() throws AlreadyParkedException, AllParkingLotsAreFullException {
-        Attendant attendant = new Attendant();
-        attendant.chooseFirstSlot();
-
-        ParkingLot firstParkingLot = new ParkingLot(2);
-        ParkingLot secondParkingLot = new ParkingLot(1);
-
-        attendant.assignLot(firstParkingLot);
-        attendant.assignLot(secondParkingLot);
-
-        ParkingLotObserver firstParkingLotObserver = mock(ParkingLotObserver.class);
-        ParkingLotObserver secondParkingLotObserver = mock(ParkingLotObserver.class);
-
-        firstParkingLot.addObserver(firstParkingLotObserver);
-        secondParkingLot.addObserver(secondParkingLotObserver);
-
-        attendant.park(mock(Parkable.class));
-        attendant.park(mock(Parkable.class));
-
-        verify(firstParkingLotObserver, times(1)).notifyFull(firstParkingLot);
-        verify(secondParkingLotObserver, never()).notifyFull(secondParkingLot);
-
+        verify(parkingLot1, times(1)).park(any());
+        verify(parkingLot2, never()).park(any());
+        verify(selector, times(1)).select(any());
     }
 }
