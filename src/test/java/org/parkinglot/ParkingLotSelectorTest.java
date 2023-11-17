@@ -34,7 +34,7 @@ public class ParkingLotSelectorTest {
         when(parkingLotOne.capacity()).thenReturn(1);
         when(parkingLotTwo.capacity()).thenReturn(2);
 
-        assertEquals(parkingLotTwo, parkingLotSelector.select(parkingLots));
+        assertEquals(parkingLotOne, parkingLotSelector.select(parkingLots));
     }
 
     @Test
